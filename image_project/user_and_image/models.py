@@ -15,7 +15,7 @@ class Category(models.Model):
 
 
 class Image(models.Model):
-    file_img = models.ImageField(upload_to='static/image/', verbose_name='File image')
+    file_img = models.ImageField(upload_to='images/', verbose_name='File image')
     description = models.TextField(max_length=2500, verbose_name='Description')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Category')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='User')

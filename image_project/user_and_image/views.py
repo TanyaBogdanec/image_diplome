@@ -9,14 +9,13 @@ from django.shortcuts import get_object_or_404
 
 
 
-
 def file_img_view(request, user_id):
     """
-    загрузка картинки
+    загрузка картинки, обработка
     """
     file_image = get_object_or_404(Image, pk=user_id)
     context = {'file_image': file_image}
-    return render(request, 'file_image.html', context)
+    return render(request, 'image.html', context)
 
 
 def image_upload_view(request):
@@ -34,6 +33,9 @@ def image_upload_view(request):
 
 
 def signup_view(request):
+    """
+    регистрация пользователя
+    """
     if request.method == 'POST':
         form = SignUpForm(request.POST)
     if form.is_valid():
@@ -51,6 +53,9 @@ def signup_view(request):
 
 
 def image_view(request):
+    """
+    принять запрос от пользователя и вернуть некоторую HTML - страницу.
+    """
     if request.method == 'POST':
         form = ImageForm(request.POST, request.FILES)
 

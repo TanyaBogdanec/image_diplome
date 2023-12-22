@@ -9,8 +9,8 @@
     <body>
         {% if img_obj %}
             <h3>Welcome to my page : {{img_obj.title}}</h3>
-<!--            <img src="{{file_image.file_img.url}}" alt="File image" style="max-height:300px">-->
-            <img src="static/image.jpg" alt="Image" style="max-height:300px">
+<!--            <img src="media/images/image.jpg" alt="File image" style="max-height:300px">-->
+            <img src={{ image.file_img.url }} alt="Image" style="max-height:300px">
         {% endif %}
         <form method = "post" enctype="multipart/form-data">
             {% csrf_token %}
