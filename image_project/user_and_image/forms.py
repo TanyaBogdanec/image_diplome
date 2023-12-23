@@ -10,7 +10,6 @@ class ImageForm(forms.ModelForm):
 
 
 class SignUpForm(forms.Form):
-    email = forms.EmailField(max_length=100, required=True)
     username = forms.CharField(max_length=100, required=True)
     password = forms.CharField(widget=forms.PasswordInput())
 
