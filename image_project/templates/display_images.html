@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+
+{% block title %}Display images{% endblock %}
+
+{% block content %}
+    {% for image in display_images %}
+        <div class="col-md-4">
+            {{ image.name }}
+            <img src="{{image.file_img.url}}" class="img-responsive" style="width: 100%; float: left; margin-right: 10px;">
+        </div>
+    {% endfor %}
+{% endblock %}
