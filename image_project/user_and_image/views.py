@@ -1,10 +1,38 @@
-from django.contrib.auth.models import User
-from django.contrib.auth import login, authenticate
+from django.views import View
 from django.shortcuts import render, redirect
-from .forms import UserRegistrationForm, ImageForm
+from .forms import UserCreationForm, ImageForm
 from django.http import HttpResponse
 from .models import Image
+from django.contrib.auth import authenticate, login
 
+
+class Register(View):
+    """
+    User registration
+    Регистрация пользователя
+    """
+    template_name = 'registration/register.html'
+
+    def get(self, request):
+        context = {
+            'form': UserCreationForm()
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        form = UserCreationForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return redirect('home')
+        context = {
+            'form': form
+        }
+        return render(request, self.template_name, context)
 
 
 def image_upload_view(request):
@@ -29,23 +57,6 @@ def display_images(request):
         return render(request, 'display_images.html', {'images': images})
 
 
-def register_view(request):
-    """
-    User registration
-    Регистрация пользователя
-    """
-    if request.method == 'POST':
-        user_form = UserRegistrationForm(request.POST)
-        if user_form.is_valid():
-            new_user = user_form.save(commit=False)
-            new_user.set_password(user_form.cleaned_data['password'])
-            new_user.save()
-            return render(request, 'register_done.html', {'new_user': new_user})
-    else:
-        user_form = UserRegistrationForm()
-    return render(request, 'register.html', {'user_form': user_form})
-
-
 def upload_image_user_view(request):
     """
     Upload images and share them with other users.
@@ -53,14 +64,14 @@ def upload_image_user_view(request):
     """
     if request.method == 'POST':
         form = ImageForm(request.POST, request.FILES)
-    if form.is_valid():
-        image = form.save(commit=False)
-        image.user = request.user
-        image.save()
-        return redirect('user_image', image_id=image.pk)
+        if form.is_valid():
+            image = form.save(commit=False)
+            image.user = request.user
+            image.save()
+            return redirect('user_image', image_id=image.pk)
     else:
         form = ImageForm()
-        return render(request, 'user.html', {'form': form})
+    return render(request, 'user.html', {'form': form})
 
 
 def user_image(request, image_id):

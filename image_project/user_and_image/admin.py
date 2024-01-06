@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import Category, Image
+from django.contrib.auth import get_user_model
+from django.contrib.auth.admin import UserAdmin
 
 
 class ImageAdmin(admin.ModelAdmin):
@@ -12,4 +14,9 @@ admin.site.register(Category)
 admin.site.register(Image, ImageAdmin)
 
 
+User = get_user_model()
+
+@admin.register(User)
+class UserAdmin(UserAdmin):
+    pass
 
