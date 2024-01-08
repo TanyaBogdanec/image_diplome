@@ -1,9 +1,13 @@
 from django.views import View
 from django.shortcuts import render, redirect
+from rest_framework import generics
+
 from .forms import UserCreationForm, ImageForm
 from django.http import HttpResponse
 from .models import Image
 from django.contrib.auth import authenticate, login
+
+from .serializer.image_serializer import ImageSerializer
 
 
 class Register(View):
@@ -45,10 +49,10 @@ def image_upload_view(request):
         if form.is_valid():
             form.save()
             img_obj = form.instance
-            return render(request, 'image.html', {'form': form, 'img_obj': img_obj})
+            return render(request, 'display_images', {'form': form, 'img_obj': img_obj})
     else:
         form = ImageForm()
-    return render(request, 'display_images', {'form': form})
+    return render(request, 'display_images.html', {'form': form})
 
 
 def display_images(request):
@@ -98,4 +102,12 @@ def success(request):
     return HttpResponse(request, 'success.html')
 
 
+
+class ImageListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
+
+class ImageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
 
